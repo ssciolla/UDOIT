@@ -355,8 +355,7 @@ class UfixitModal extends React.Component {
           // update activeIssue
           issue.pending = false
           this.props.handleActiveIssue(issue)
-        }
-        else {
+        } else {
           // set messages 
           response.messages.forEach((msg) => this.addMessage(msg))
 
@@ -371,11 +370,9 @@ class UfixitModal extends React.Component {
               .then((res) => {
                 // update activeIssue
                 this.props.handleActiveIssue(newIssue)
-                
-                this.props.handleIssueSave(newIssue, res.data)
+                this.props.handleIssueSave(newIssue);
               })
-          }
-          else {
+          } else {
             issue.pending = false
             this.props.handleActiveIssue(issue)
           }
