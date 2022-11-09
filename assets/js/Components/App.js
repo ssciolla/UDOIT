@@ -216,15 +216,14 @@ class App extends React.Component {
     this.messages = [];
   }
 
-  handleIssueSave(newIssue, newReport) {
-    let { report } = this.state
-    report = {...report, ...newReport}
+  handleIssueSave(newIssue) {
+    const newReport = { ...this.state.report };
 
-    if (report && Array.isArray(report.issues)) {
-      report.issues = report.issues.map(issue => (issue.id == newIssue.id) ? newIssue : issue)
+    if (newReport && Array.isArray(newReport.issues)) {
+      newReport.issues = newReport.issues.map(issue => (issue.id == newIssue.id) ? newIssue : issue);
     }
 
-    this.setState({ report })
+    this.setState({ report: newReport });
   }
 
   handleFileSave(newFile, newReport) {
