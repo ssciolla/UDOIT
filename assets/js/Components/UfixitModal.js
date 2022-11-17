@@ -370,7 +370,7 @@ class UfixitModal extends React.Component {
               .then((res) => {
                 // update activeIssue
                 this.props.handleActiveIssue(newIssue)
-                this.props.handleIssueSave(newIssue);
+                this.props.handleIssueSave(newIssue, res.data);
               })
           } else {
             issue.pending = false
