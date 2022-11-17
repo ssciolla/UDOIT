@@ -216,14 +216,19 @@ class App extends React.Component {
     this.messages = [];
   }
 
-  handleIssueSave(newIssue) {
-    const newReport = { ...this.state.report };
+  handleIssueSave(newIssue, newReport) {
+    const oldReport = this.state.report;
+    const report = { ...oldReport, ...newReport };
 
-    if (newReport && Array.isArray(newReport.issues)) {
-      newReport.issues = newReport.issues.map(issue => (issue.id == newIssue.id) ? newIssue : issue);
-    }
+    // Combine issues with frontend state
+    report.issues = report.issues.map((issue) => {
+      if (issue.id === newIssue.id) return newIssue
 
-    this.setState({ report: newReport });
+      const oldIssue = oldReport.issues.find(oldReportIssue => oldReportIssue.id === issue.id);
+      return oldIssue !== undefined ? { ...oldIssue, ...issue } : issue;
+    });
+
+    this.setState({ report });
   }
 
   handleFileSave(newFile, newReport) {
