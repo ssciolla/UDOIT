@@ -42,7 +42,6 @@ class ContentPage extends React.Component {
       activeIssue: null,
       trayOpen: false,
       modalOpen: false,
-      activeIndex: -1,
       searchTerm: '',
       filters: {
         contentTypes: [],
@@ -118,16 +117,24 @@ class ContentPage extends React.Component {
         sortBy: 'scanRuleLabel',
         ascending: true,
         pageNum: 0,
-      },
-      activeIndex: -1,
+      }
     })
   }
 
-  handleActiveIssue(newIssue, newIndex) {
-    this.setState({
-      activeIssue: newIssue,
-      activeIndex: Number(newIndex)
-    })
+  handleActiveIssue(newIssue) {
+    const validIds = this.props.report.issues.map(i => i.id);
+
+    let activeIssue = null
+    if (!validIds.includes(newIssue.id)) {
+      // Should filteredRows be in state?
+      const filteredRows = this.getFilteredContent()
+      if (filteredRows.length > 0) {
+        activeIssue = filteredRows[0].issue
+      }
+    } else {
+      activeIssue = newIssue
+    }
+    this.setState({ activeIssue })
   }
 
   handleTableSettings = (setting) => {
@@ -318,18 +325,19 @@ class ContentPage extends React.Component {
           t={this.props.t}
           settings={this.props.settings}
         />}
-        {this.state.modalOpen && <UfixitModal
-          open={this.state.modalOpen}
-          activeIssue={this.state.activeIssue}
-          activeIndex={this.state.activeIndex}
-          filteredRows={filteredRows}
-          activeContentItem={activeContentItem}
-          settings={this.props.settings}
-          handleCloseButton={this.handleCloseButton}
-          handleActiveIssue={this.handleActiveIssue}
-          handleIssueSave={this.props.handleIssueSave}
-          t={this.props.t}
-          />}
+        {this.state.modalOpen && (
+          <UfixitModal
+            open={this.state.modalOpen}
+            activeIssue={this.state.activeIssue}
+            filteredRows={filteredRows}
+            activeContentItem={activeContentItem}
+            settings={this.props.settings}
+            handleCloseButton={this.handleCloseButton}
+            handleActiveIssue={this.handleActiveIssue}
+            handleIssueSave={this.props.handleIssueSave}
+            t={this.props.t}
+          />
+        )}
 
         {filteredRows.length === 0 &&
             <Billboard
